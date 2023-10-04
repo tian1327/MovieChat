@@ -276,7 +276,8 @@ class Chat:
             raise NotImplementedError
         video_emb, _ = self.model.encode_long_video(cur_image, middle_video)
         img_list.append(video_emb) 
-        return msg  
+        return msg
+
     def gener_infer(self, video_path, text_input, num_beams, temperature, libraries, minute, second):
         print("here")
         fragment_video_path = "src/video_fragment/output.mp4"
@@ -353,10 +354,19 @@ if __name__ =='__main__':
     cap = cv2.VideoCapture(video_path)
     fps_video = cap.get(cv2.CAP_PROP_FPS)
     cur_fps = fps_video * (60*cur_min + cur_sec)
+    print('cur_fps:', cur_fps)
 
+    print('video_path:', video_path)
     cap = cv2.VideoCapture(video_path)
+    if cap.isOpened() == False:
+        print('Error opening video stream or file')
+        exit()
+
     cap.set(cv2.CAP_PROP_POS_FRAMES, cur_fps)
     ret, frame = cap.read()
+    if ret == False:
+        print('Video is over')
+        exit()
     temp_frame_path = 'src/output_frame/snapshot.jpg'
 
     cv2.imwrite(temp_frame_path, frame) 

@@ -29,3 +29,8 @@ MANIFEST
 data/
 ckpt/
 *.sh
+
+.cache/
+condaenv.scsr38q_.requirements.txt
+src/ANet/
+src/examples/
