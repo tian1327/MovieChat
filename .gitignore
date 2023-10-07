@@ -34,3 +34,5 @@ ckpt/
 condaenv.scsr38q_.requirements.txt
 src/ANet/
 src/examples/
+src/video_fragment/output.mp4
+src/output_frame/snapshot.jpg
