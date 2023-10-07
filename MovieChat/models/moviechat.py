@@ -1,10 +1,8 @@
 import logging
 import random
-
 import torch
 from torch.cuda.amp import autocast as autocast
 import torch.nn as nn
-
 from MovieChat.common.registry import registry
 from MovieChat.models.blip2 import Blip2Base, disabled_train
 from MovieChat.models.modeling_llama import LlamaForCausalLM
@@ -12,16 +10,13 @@ from transformers import LlamaTokenizer,BertConfig
 import einops
 import copy
 from MovieChat.models.Qformer import BertConfig, BertLMHeadModel
-
-
 import queue
 import numpy as np
 from scipy.spatial.distance import cosine
-
 from skimage import transform
 import cv2
-
 from PIL import Image
+from time import time
 
 @registry.register_model("moviechat")
 class MovieChat(Blip2Base):
@@ -122,7 +117,9 @@ class MovieChat(Blip2Base):
             self.query_tokens.requires_grad = False
             logging.info("freeze Qformer")
         logging.info('Loading Q-Former Done')
+        print('Loading Q-Former Done')
 
+        print('Loading LLAMA Tokenizer')
         logging.info('Loading LLAMA Tokenizer')
         self.llama_tokenizer = LlamaTokenizer.from_pretrained(llama_model, use_fast=False)
         if self.llama_tokenizer.pad_token is None:
@@ -134,7 +131,9 @@ class MovieChat(Blip2Base):
         
         self.IMAGE_PATCH_TOKEN_ID = self.llama_tokenizer.get_vocab()[DEFAULT_IMAGE_PATCH_TOKEN]
         self.AUDIO_PATCH_TOKEN_ID = self.llama_tokenizer.get_vocab()[DEFAULT_AUDIO_PATCH_TOKEN]
+        print('Loading LLAMA Tokenizer Done')
 
+        print('Loading LLAMA Model')
         logging.info('Loading LLAMA Model')
         if self.low_resource:
             self.llama_model = LlamaForCausalLM.from_pretrained(
@@ -146,12 +145,13 @@ class MovieChat(Blip2Base):
         else:
             self.llama_model = LlamaForCausalLM.from_pretrained(
                 llama_model,
-                torch_dtype=torch.float16,
+                torch_dtype=torch.float16
             )
 
         for name, param in self.llama_model.named_parameters():
             param.requires_grad = False
         logging.info('Loading LLAMA Done')
+        print('Loading LLAMA Done')
 
 
         logging.info('Loading LLAMA proj')
@@ -174,6 +174,7 @@ class MovieChat(Blip2Base):
             logging.info('LLAMA proj is not frozen')
 
         logging.info('Loading llama_proj Done')
+        print('Loading llama_proj Done')
 
         self.max_txt_len = max_txt_len
         self.end_sym = end_sym
@@ -689,9 +690,11 @@ class MovieChat(Blip2Base):
             print("Load first Checkpoint: {}".format(ckpt_path))
             ckpt = torch.load(ckpt_path, map_location="cpu")
             msg = model.load_state_dict(ckpt['model'], strict=False)
+
         ckpt_path_2 = cfg.get("ckpt_2", "")  
         if ckpt_path_2:
             print("Load second Checkpoint: {}".format(ckpt_path_2))
             ckpt = torch.load(ckpt_path_2, map_location="cpu")
             msg = model.load_state_dict(ckpt['model'], strict=False)
+            
         return model

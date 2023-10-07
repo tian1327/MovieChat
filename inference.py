@@ -15,7 +15,7 @@ from MovieChat.common.registry import registry
 from MovieChat.conversation.conversation_video import Chat, Conversation, default_conversation,SeparatorStyle
 import decord
 import cv2
-import time
+from time import time
 import subprocess
 from moviepy.editor import VideoFileClip
 from decord import VideoReader
@@ -49,9 +49,9 @@ def parse_args():
     parser.add_argument("--text-query", required=True, help="question the video")
     parser.add_argument("--video-path", required=True, help="path to video file.")
     parser.add_argument("--fragment-video-path", required=True, help="path to video fragment file.")
-    parser.add_argument("--cur-sec", type=int, default=2, help="current minute")
-    parser.add_argument("--cur-min", type=int, default=15, help="current second")
-    parser.add_argument("--middle-video", type=bool, default=False, help="current second")
+    parser.add_argument("--cur-sec", type=int, default=0, help="current minute")
+    parser.add_argument("--cur-min", type=int, default=0, help="current second")
+    parser.add_argument("--middle-video", type=float, default=0, help="1: breakpoint mode, 0: global mode")
     parser.add_argument(
         "--options",
         nargs="+",
@@ -93,6 +93,7 @@ def video_duration(filename):
                              "default=noprint_wrappers=1:nokey=1", filename],
                             stdout=subprocess.PIPE,
                             stderr=subprocess.STDOUT)
+    print('result.stdout', result.stdout)
     return float(result.stdout)
  
 def capture_video(video_path, fragment_video_path, per_video_length, n_stage):
@@ -103,6 +104,7 @@ def capture_video(video_path, fragment_video_path, per_video_length, n_stage):
 
     
 def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="uniform", return_msg = False):
+
     decord.bridge.set_bridge("torch")
     vr = VideoReader(uri=video_path, height=height, width=width)
 
@@ -132,6 +134,7 @@ def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="unifor
     sec = ", ".join([str(round(f / fps, 1)) for f in indices])
     # " " should be added in the start and end
     msg = f"The video contains {len(indices)} frames sampled at {sec} seconds. "
+
     return frms, msg
 
 
@@ -186,6 +189,7 @@ class Chat:
 
     def answer(self, img_list, input_text, msg, max_new_tokens=300, num_beams=1, min_length=1, top_p=0.9,
             repetition_penalty=1.0, length_penalty=1, temperature=1.0, max_length=2000):
+        
         embs = self.get_context_emb(input_text, msg, img_list) 
 
         current_max_len = embs.shape[1] + max_new_tokens
@@ -217,10 +221,14 @@ class Chat:
         output_text = self.model.llama_tokenizer.decode(output_token, add_special_tokens=False)
         output_text = output_text.split('###')[0]  # remove the stop sign '###'
         output_text = output_text.split('Assistant:')[-1].strip()
+
         return output_text, output_token.cpu().numpy()
     
     def cal_frame(self, video_length, cur_min, cur_sec, middle_video):
+
         per_frag_second = video_length / N_SAMPLES
+        print('middle_video:', middle_video)
+        print('per_frag_second:', per_frag_second)
         if middle_video:
             cur_seconds = cur_min * 60 + cur_sec
             num_frames = int(cur_seconds / per_frag_second)
@@ -233,12 +241,16 @@ class Chat:
             return num_frames, cur_frame
 
     def upload_video_without_audio(self, video_path, fragment_video_path, cur_min, cur_sec, cur_image, img_list, middle_video):
+        
         msg = ""
         if isinstance(video_path, str):  # is a video path
-            ext = os.path.splitext(video_path)[-1].lower()
-            print(video_path)
+            # ext = os.path.splitext(video_path)[-1].lower()
+            # print(video_path)
             video_length = video_duration(video_path) 
             num_frames, cur_frame = self.cal_frame(video_length, cur_min, cur_sec, middle_video)
+            print('num_frames:', num_frames)
+            print('cur_frame:', cur_frame)
+
             if num_frames == 0:
                 video_fragment = parse_video_fragment(video_path=video_path, video_length=video_length, n_stage=0, n_samples= N_SAMPLES)
                 video_fragment, msg = load_video(
@@ -250,9 +262,8 @@ class Chat:
                 ) 
                 video_fragment = self.vis_processor.transform(video_fragment)
                 video_fragment = video_fragment.unsqueeze(0).to(self.device)
-
-
                 self.model.encode_short_memory_frame(video_fragment, cur_frame)
+
             else:
                 for i in range(num_frames):
                     print(i)
@@ -274,9 +285,25 @@ class Chat:
                 
         else:
             raise NotImplementedError
+        
+        print('ck middle_video:', middle_video)
         video_emb, _ = self.model.encode_long_video(cur_image, middle_video)
+        print('len(img_list):', len(img_list))
         img_list.append(video_emb) 
+
         return msg
+
+
+# def gener_infer_fast(self, img_list, text_input, msg, num_beams, temperature):
+
+#     llm_message = self.answer(img_list=img_list,
+#                         input_text=text_input,
+#                         msg = msg,
+#                         num_beams=num_beams,
+#                         temperature=temperature,
+#                         max_new_tokens=300,
+#                         max_length=2000)[0]
+
 
     def gener_infer(self, video_path, text_input, num_beams, temperature, libraries, minute, second):
         print("here")
@@ -316,7 +343,9 @@ class Chat:
                 img_list=img_list, 
                 middle_video = self.model.middle_video,
                 )
-            
+            print('msg:', msg)
+            print('len(img_list):', len(img_list))
+
             llm_message = self.answer(img_list=img_list,
                                     input_text=text_input,
                                     msg = msg,
@@ -328,7 +357,9 @@ class Chat:
             self.output_text = llm_message
             print(self.output_text)
 
+
 if __name__ =='__main__':
+    inference_start = time()
     config_seed = 42
     setup_seeds(config_seed)
     print('Initializing Chat')
@@ -343,24 +374,26 @@ if __name__ =='__main__':
     vis_processor_cfg = cfg.datasets_cfg.webvid.vis_processor.train
     vis_processor = registry.get_processor_class(vis_processor_cfg.name).from_config(vis_processor_cfg)
     chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id))
-    print('Initialization Finished')
+    init_end = time()
+    print(f'Initialization Finished, time: {round(init_end - inference_start)} seconds\n')
 
     video_path = args.video_path
     fragment_video_path = args.fragment_video_path
     cur_min = args.cur_min
     cur_sec = args.cur_sec
     middle_video = args.middle_video
-
-    cap = cv2.VideoCapture(video_path)
-    fps_video = cap.get(cv2.CAP_PROP_FPS)
-    cur_fps = fps_video * (60*cur_min + cur_sec)
-    print('cur_fps:', cur_fps)
+    print('middle_video:', middle_video)
 
     print('video_path:', video_path)
     cap = cv2.VideoCapture(video_path)
-    if cap.isOpened() == False:
-        print('Error opening video stream or file')
-        exit()
+    fps_video = cap.get(cv2.CAP_PROP_FPS)
+    cur_fps = fps_video * (60*cur_min + cur_sec)
+    print('cur_frame:', cur_fps)
+    
+    # cap = cv2.VideoCapture(video_path)
+    # if cap.isOpened() == False:
+    #     print('Error opening video stream or file')
+    #     exit()
 
     cap.set(cv2.CAP_PROP_POS_FRAMES, cur_fps)
     ret, frame = cap.read()
@@ -375,12 +408,13 @@ if __name__ =='__main__':
     cur_image = chat.model.encode_image(image)
 
     if middle_video == 1:
-        middle_video = True
+        middle_video = True # breakpoint mode
     else:
-        middle_video = False
+        middle_video = False # global mode
+    print('middle_video:', middle_video)
 
     img_list = []
-    middle_video = True
+    # middle_video = True
     msg = chat.upload_video_without_audio(
         video_path=video_path, 
         fragment_video_path=fragment_video_path,
@@ -390,11 +424,15 @@ if __name__ =='__main__':
         img_list=img_list, 
         middle_video = middle_video,
         )
-    
-    text_input = args.text_query
+    print('msg:', msg)
+    msg_end = time()
+    print(f'prepare video finished, time: {round(msg_end - init_end)} seconds')
 
+    text_input = args.text_query
     num_beams = args.num_beams
     temperature = args.temperature
+    print('len(img_list):', len(img_list))
+    print('text_input:', text_input)
     llm_message = chat.answer(img_list=img_list,
                               input_text=text_input,
                               msg = msg,
@@ -402,6 +440,11 @@ if __name__ =='__main__':
                               temperature=temperature,
                               max_new_tokens=300,
                               max_length=2000)[0]
-
+    
+    print()
     print(llm_message)
+    infer_end = time()
+    print(f'Inference time: {round(infer_end - msg_end)} seconds')
+    print(f'Total time: {round(infer_end - inference_start)} seconds')
+
     

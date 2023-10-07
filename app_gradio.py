@@ -43,7 +43,7 @@ SHORT_MEMORY_Length = 10
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Demo")
-    parser.add_argument("--cfg-path", required=True, help="path to configuration file.")
+    parser.add_argument("--cfg-path", default='eval_configs/MovieChat.yaml', help="path to configuration file.")
     parser.add_argument("--gpu-id", type=int, default=0, help="specify the gpu to load the model.")
     parser.add_argument("--num-beams", type=int, default=1)
     parser.add_argument("--temperature", type=float, default=1.0)
@@ -179,6 +179,10 @@ with gr.Blocks() as demo:
         gr.Examples(examples=[
             [f"src/examples/Cooking_cake.mp4", "What is going on in the kitchen? "],
             [f"src/examples/goblin.mp4", "Can you describe the movie?"],
+            [f"src/examples/GhxqIITtTtU.mp4", "What is the activity happening in the video?"],
+            [f"src/examples/c472zg9k5vU.mp4", "What is the activity happening in the video?"],
+            [f"src/examples/pYrj-3kMUHw.mp4", "What is the activity happening in the video?"],
+            [f"src/examples/ZveF2b83Tc0.mp4", "What is the activity happening in the video?"],
         ], inputs=[video, text_input])
         
     upload_button.click(show_video, [video])
@@ -199,6 +203,7 @@ with gr.Blocks() as demo:
     chat = Chat(model, vis_processor, device='cuda:{}'.format(args.gpu_id))
     print('Initialization Finished')
 
+    # build the long memory
     
     upload_text.click(chat.gener_infer,[video, text_input, num_beams, temperature, libraries, minute, second])
     
