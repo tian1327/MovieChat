@@ -1,0 +1,272 @@
+video_path: src/examples/GhxqIITtTtU.mp4
+video_url: https://www.youtube.com/watch?v=GhxqIITtTtU
+cur_min: 0
+cur_sec: 27
+middle_video: False
+Question: Describe the activities in the video. Focus on objects and movement.
+Answer: In the video, we see a man playing drums in a room with a television set on the wall. Then, a man is shown playing soccer in front of a dark background. Next, soldiers are shown playing a game in a room with a television set and chairs. Then, a man is shown holding a camera while a man is sitting on a bench in a room with a television set. Then, we see a man wearing red standing next to a man wearing a hat, and a man with a hat is shown sitting on a bench in a room with a television set. Following that, a man is shown sitting on a black couch in a room with a television set. Lastly, soldiers are shown playing a game in a room with a television set, and a man wearing a baseball cap is shown in a dark room with a television set. Throughout the video, we also see a television set, a television, a room, a door, a black couch, a television set, a television, a room, a door, a black couch, a television set, a television, a room, a door, a black couch, a television set, a television, a room, a door, a black couch, a television set, a television, and a room.
+
+video_path: src/examples/GhxqIITtTtU.mp4
+video_url: https://www.youtube.com/watch?v=GhxqIITtTtU
+cur_min: 0
+cur_sec: 27
+middle_video: False
+Question: Is there anything unusual in the video?
+Answer: Yes, there is a moment in the video where there is a black background with the words "Africa" and "Ghana" on it.
+
+video_path: src/examples/GhxqIITtTtU.mp4
+video_url: https://www.youtube.com/watch?v=GhxqIITtTtU
+cur_min: 0
+cur_sec: 27
+middle_video: False
+Question: How many gorillas in the video?
+Answer: There are multiple gorillas in the video. It's difficult to count exactly how many, but there are several.
+
+video_path: src/examples/GhxqIITtTtU.mp4
+video_url: https://www.youtube.com/watch?v=GhxqIITtTtU
+cur_min: 0
+cur_sec: 27
+middle_video: False
+Question: What does the video show about things happening in the zoo?
+Answer: The video shows various animals and people at a zoo. At first, there are people walking through the zoo and playing with a dog. Next, a person is seen walking through the zoo with his dog. Then, a group of men in uniforms are seen walking through the zoo, followed by a group of men in uniforms standing around. Finally, soldiers are seen in a group with people in a field.
+
+video_path: src/examples/GhxqIITtTtU.mp4
+video_url: https://www.youtube.com/watch?v=GhxqIITtTtU
+cur_min: 0
+cur_sec: 27
+middle_video: False
+Question: What does the video show about the group of gorillas are doing?
+Answer: The video shows a group of gorillas in a dark room with a television set on the wall. They are seen walking around and sitting on a log.
+
+video_path: src/examples/GhxqIITtTtU.mp4
+video_url: https://www.youtube.com/watch?v=GhxqIITtTtU
+cur_min: 0
+cur_sec: 27
+middle_video: True
+Question: What is the black kid doing in the video?
+Answer: In the video, the black child is playing with a toy and sitting down, while a group of people is watching.
+
+video_path: src/examples/GhxqIITtTtU.mp4
+video_url: https://www.youtube.com/watch?v=GhxqIITtTtU
+cur_min: 0
+cur_sec: 27
+middle_video: True
+Question: What is the happening in the video? And what is the gorilla holding?
+Answer: In the video, we see a gorilla holding a metal bat.
+
+video_path: src/examples/pYrj-3kMUHw.mp4
+video_url: https://www.youtube.com/watch?v=pYrj-3kMUHw
+cur_min: 0
+cur_sec: 27
+middle_video: False
+Question: Describe the activities in the video. Focus on objects and movement.
+Answer: In the video, we see a man and woman in a cage with a baby gorilla. They are sitting in the cage with other gorillas nearby. The man is wearing a blue shirt and the woman is wearing a purple shirt. The cage has bars, and there are also a few trees in the background. The scene is in a jungle, and there are also monkeys and other animals nearby.
+
+video_path: src/examples/pYrj-3kMUHw.mp4
+video_url: https://www.youtube.com/watch?v=pYrj-3kMUHw
+cur_min: 0
+cur_sec: 27
+middle_video: False
+Question: Is there anything unusual in the video?
+Answer: Yes, there is a moment in the video where the person who is sitting in the cage has a camera in his hand. He seems to be taking pictures of the animal in the cage.
+
+video_path: src/examples/pYrj-3kMUHw.mp4
+video_url: https://www.youtube.com/watch?v=pYrj-3kMUHw
+cur_min: 0
+cur_sec: 27
+middle_video: True
+Question: How many gorillas in the video?
+Answer: There are several gorillas in the video, but it's not clear how many there are.
+
+video_path: src/examples/pYrj-3kMUHw.mp4
+video_url: https://www.youtube.com/watch?v=pYrj-3kMUHw
+cur_min: 0
+cur_sec: 27
+middle_video: True
+Question: What is happening in the video?
+Answer: In the given video, we can see a gorilla inside a cage behind a locked door. The gorilla is standing on a bench in the cage and looking outside. The background of the video shows a dark, damp-looking enclosure with chains attached to the wall. The scene also includes a woman's hand on a window, a black and white cat, a black and white dog, a black and white cow, and a black and white elephant. The video is slow-moving, and there are no people in the frame.
+
+video_path: src/examples/pYrj-3kMUHw.mp4
+video_url: https://www.youtube.com/watch?v=pYrj-3kMUHw
+cur_min: 0
+cur_sec: 44
+middle_video: True
+Question: Why is the gorilla wearing blue cloth?
+Answer: The gorilla is wearing a blue cloth around its neck because it has been tied up with it. It is a sign of captivity.
+
+video_path: src/examples/pYrj-3kMUHw.mp4
+video_url: https://www.youtube.com/watch?v=pYrj-3kMUHw
+cur_min: 0
+cur_sec: 44
+middle_video: True
+Question: Who is wearing blue cloth?
+Answer: In the given video, we can see a baby gorilla wearing blue clothes.
+
+video_path: src/examples/pYrj-3kMUHw.mp4
+video_url: https://www.youtube.com/watch?v=pYrj-3kMUHw
+cur_min: 2
+cur_sec: 17
+middle_video: True
+Question: What are the animals on the ground? Are they dogs?
+Answer: Yes, they appear to be dogs.
+
+video_path: src/examples/c472zg9k5vU.mp4
+video_url: https://www.youtube.com/watch?v=c472zg9k5vU
+cur_min: 0
+cur_sec: 27
+middle_video: False
+Question: What is this video about?
+Answer: This video shows different shots of mountainous landscapes in the wild, including a gorilla sitting in a grass field, people on a hill with a green field in the background, and animals on the grass. There are also shots of gorillas and other animals in these landscapes.
+
+video_path: src/examples/c472zg9k5vU.mp4
+video_url: https://www.youtube.com/watch?v=c472zg9k5vU
+cur_min: 0
+cur_sec: 27
+middle_video: False
+Question: Describe the activities in the video. Focus on objects and movement.
+Answer: In the video, we see a safari in the forest where we see a group of gorillas and hippos. We also see a gorilla in the bush and a gorilla on the grass. There are also people walking and sitting in the grass. In addition, we see a man sitting in the grass, a man and a monkey in the grass, and a man and a gorilla in the grass.
+
+video_path: src/examples/c472zg9k5vU.mp4
+video_url: https://www.youtube.com/watch?v=c472zg9k5vU
+cur_min: 0
+cur_sec: 27
+middle_video: False
+Question: Is there anything unusual in the video?
+Answer: Yes, there is a moment in the video where the camera shows the gorillas sitting on the green grass. It seems like they are calmly sitting there, enjoying the view.
+
+video_path: src/examples/c472zg9k5vU.mp4
+video_url: https://www.youtube.com/watch?v=c472zg9k5vU
+cur_min: 0
+cur_sec: 27
+middle_video: False
+Question: What does the video show?
+Answer: The video shows different shots of animals and people in the wilderness, including giraffes, hippos, lions, elephants, and people hiking through the forest.
+
+video_path: src/examples/c472zg9k5vU.mp4
+video_url: https://www.youtube.com/watch?v=c472zg9k5vU
+cur_min: 1
+cur_sec: 6
+middle_video: True
+Question: How many gorillas in the video?
+Answer: There are no gorillas in the video. The video only shows scenes of mountains, forests, and green landscapes.
+
+video_path: src/examples/c472zg9k5vU.mp4
+video_url: https://www.youtube.com/watch?v=c472zg9k5vU
+cur_min: 1
+cur_sec: 6
+middle_video: True
+Question: What is happening in the video?
+Answer: In the given video, we can see a landscape with mountains in the distance and a path leading towards them. The mountains are covered with fog, and we can see the sea in the background. The path is made of grass and is surrounded by trees. We also see a group of people standing on the path, looking towards the mountains. The video also shows a sunset with a beautiful sky.
+
+video_path: src/examples/c472zg9k5vU.mp4
+video_url: https://www.youtube.com/watch?v=c472zg9k5vU
+cur_min: 6
+cur_sec: 45
+middle_video: True
+Question: What is happening in the video?
+Answer: In the video, we see a baby black bear in the grass with trees in the background. Later on, we see a man and his pet bear walking in the grass with a mountain in the background. Finally, we see a group of people hiking in the jungle with trees in the background.
+
+video_path: src/examples/c472zg9k5vU.mp4
+video_url: https://www.youtube.com/watch?v=c472zg9k5vU
+cur_min: 6
+cur_sec: 45
+middle_video: True
+Question: What does the black kid on the ground is doing?
+Answer: The black kid is lying on the ground and it appears that he is not doing anything specific.
+
+video_path: src/examples/c472zg9k5vU.mp4
+video_url: https://www.youtube.com/watch?v=c472zg9k5vU
+cur_min: 9
+cur_sec: 29
+middle_video: True
+Question: What is the black dog doing?
+Answer: In the video, the black dog is walking in the grass.
+
+video_path: src/examples/ZveF2b83Tc0.mp4
+video_url: https://www.youtube.com/watch?v=ZveF2b83Tc0
+cur_min: 0
+cur_sec: 27
+middle_video: False
+Question: What is this video about?
+Answer: This video shows a group of people and a gorilla standing in a field of green grass with a blue sky in the background. The people are walking with the gorilla and a large tree is visible in the scene.
+
+video_path: src/examples/ZveF2b83Tc0.mp4
+video_url: https://www.youtube.com/watch?v=ZveF2b83Tc0
+cur_min: 0
+cur_sec: 27
+middle_video: False
+Question: Describe the activities in the video. Focus on objects and movement.
+Answer: In the video, we see a safari in the forest where people are walking through the grass with a chimpanzee in the foreground. A woman is seen sitting in the grass, while a man and woman are walking near the chimpanzee. We also see a man riding a horse and another man walking through the grass. The video is shot in a peaceful natural environment, with lush green trees and mountains visible in the background.
+
+video_path: src/examples/ZveF2b83Tc0.mp4
+video_url: https://www.youtube.com/watch?v=ZveF2b83Tc0
+cur_min: 0
+cur_sec: 14
+middle_video: True
+Question: Is there anything unusual in the video?
+Answer: Yes, there are several objects and events that seem out of the ordinary in the video. For example, the video shows a large herd of elephants walking through a grassy field and a group of people on horseback riding through the grass.
+
+video_path: src/examples/ZveF2b83Tc0.mp4
+video_url: https://www.youtube.com/watch?v=ZveF2b83Tc0
+cur_min: 0
+cur_sec: 14
+middle_video: True
+Question: Who attacked who?
+Answer: It is difficult to determine who attacked who in this video. It seems that people are standing in a grassy field and a large animal is also present.
+
+video_path: src/examples/ZveF2b83Tc0.mp4
+video_url: https://www.youtube.com/watch?v=ZveF2b83Tc0
+cur_min: 0
+cur_sec: 14
+middle_video: True
+Question: Who attacked the women in pink cloth?
+Answer: I apologize for any confusion my previous answer may have caused. From the given video, it is clear that no one attacked the women in pink cloth. However, it appears that there are a group of people on horseback riding through a grassy field. They are wearing various types of clothing, such as pink shirts and pink pants. The group of people is seen walking through the tall green grass and weeds.
+
+video_path: src/examples/ZveF2b83Tc0.mp4
+video_url: https://www.youtube.com/watch?v=ZveF2b83Tc0
+cur_min: 0
+cur_sec: 37
+middle_video: False
+Question: What does the video show?
+Answer: The video shows a group of people walking through tall grass in a forest with a mountain in the background. They are followed by gorillas, elephants, and other animals. The grass is bright green and the sky is blue.
+
+video_path: src/examples/ZveF2b83Tc0.mp4
+video_url: https://www.youtube.com/watch?v=ZveF2b83Tc0
+cur_min: 0
+cur_sec: 37
+middle_video: True
+Question: How many gorillas in the video?
+Answer: There are multiple gorillas in the video. It's difficult to give an exact count without watching the video again.
+
+video_path: src/examples/ZveF2b83Tc0.mp4
+video_url: https://www.youtube.com/watch?v=ZveF2b83Tc0
+cur_min: 0
+cur_sec: 17
+middle_video: True
+Question: What is happening in the video?
+Answer: In the video, we see a group of tourists walking through a lush green forest, passing by various animals such as gorillas, chimpanzees, and buffaloes. The forest is filled with tall grass, trees, and bushes, and there is a clear blue sky visible in the background.
+
+video_path: src/examples/ZveF2b83Tc0.mp4
+video_url: https://www.youtube.com/watch?v=ZveF2b83Tc0
+cur_min: 0
+cur_sec: 37
+middle_video: True
+Question: What is happening in the video?
+Answer: In the video, we see a group of people walking through a field of tall green grass, with a couple of monkeys visible in the background. A mountain range can be seen in the distance, and there are a few trees and bushes scattered around. The scene is set in a mountainous landscape, with hills and mountains visible in the background.
+
+video_path: src/examples/ZveF2b83Tc0.mp4
+video_url: https://www.youtube.com/watch?v=ZveF2b83Tc0
+cur_min: 0
+cur_sec: 12
+middle_video: True
+Question: What does the black kid on the ground is doing?
+Answer: The black child is walking down the hill in the grass. It seems like the child is playing or exploring the nature.
+
+video_path: src/examples/ZveF2b83Tc0.mp4
+video_url: https://www.youtube.com/watch?v=ZveF2b83Tc0
+cur_min: 0
+cur_sec: 12
+middle_video: True
+Question: What is the black dog doing?
+Answer: The black dog is walking down the hill in the grass. It seems to be moving with the flow of the grass and the trees. It appears to be enjoying the surroundings and the company of other animals.
+

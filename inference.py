@@ -99,7 +99,7 @@ def video_duration(filename):
 def capture_video(video_path, fragment_video_path, per_video_length, n_stage):
     start_time = n_stage * per_video_length
     end_time = (n_stage+1) * per_video_length
-    video =CompositeVideoClip([VideoFileClip(video_path).subclip(start_time,end_time)])
+    video =CompositeVideoClip([VideoFileClip(video_path).subclip(start_time, end_time)])
     video.write_videofile(fragment_video_path)
 
     
@@ -114,7 +114,7 @@ def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="unifor
     n_frms = min(n_frms, vlen)
 
     if sampling == "uniform":
-        indices = np.arange(start, end, vlen / n_frms).astype(int).tolist()
+        indices = np.arange(start, end, vlen / n_frms).astype(int).tolist() # uniformly sample 8 frames from a video segment
     elif sampling == "headtail":
         indices_h = sorted(rnd.sample(range(vlen // 2), n_frms // 2))
         indices_t = sorted(rnd.sample(range(vlen // 2, vlen), n_frms // 2))
@@ -126,6 +126,7 @@ def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="unifor
     temp_frms = vr.get_batch(indices)
     tensor_frms = torch.from_numpy(temp_frms) if type(temp_frms) is not torch.Tensor else temp_frms
     frms = tensor_frms.permute(3, 0, 1, 2).float()  # (C, T, H, W)
+    print('frms.shape:', frms.shape)
 
     if not return_msg:
         return frms
@@ -138,11 +139,12 @@ def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="unifor
     return frms, msg
 
 
-def parse_video_fragment(video_path, video_length, n_stage = 0, n_samples = N_SAMPLES):
+def parse_video_fragment(video_path, fragment_video_path, video_length, n_stage = 0, n_samples = N_SAMPLES):
+
     decord.bridge.set_bridge("torch")
     per_video_length = video_length / n_samples
     # cut video from per_video_length(n_stage-1, n_stage)
-    fragment_video_path = "src/video_fragment/output.mp4"
+    # fragment_video_path = "src/video_fragment/output.mp4"
     capture_video(video_path, fragment_video_path, per_video_length, n_stage)
     return fragment_video_path
 
@@ -226,19 +228,23 @@ class Chat:
     
     def cal_frame(self, video_length, cur_min, cur_sec, middle_video):
 
-        per_frag_second = video_length / N_SAMPLES
+        per_frag_second = video_length / N_SAMPLES # / 32, how many seconds in each fragment
         print('middle_video:', middle_video)
         print('per_frag_second:', per_frag_second)
-        if middle_video:
+
+        if middle_video: # breakpoint mode
             cur_seconds = cur_min * 60 + cur_sec
-            num_frames = int(cur_seconds / per_frag_second)
-            per_frame_second = per_frag_second/SHORT_MEMORY_Length
-            cur_frame = int((cur_seconds-per_frag_second*num_frames)/per_frame_second)
+            num_frames = int(cur_seconds / per_frag_second) # how many fragments before breakpoint
+            per_frame_second = per_frag_second/SHORT_MEMORY_Length # / 10, why ??
+            cur_frame = int((cur_seconds-per_frag_second*num_frames)/per_frame_second) # frame number in the current fragment
+
             return num_frames, cur_frame
-        else:
+        
+        else: # global model
             cur_frame = 0
-            num_frames = int(video_length / per_frag_second)
+            num_frames = int(video_length / per_frag_second) # = N_SAMPLES 32
             return num_frames, cur_frame
+
 
     def upload_video_without_audio(self, video_path, fragment_video_path, cur_min, cur_sec, cur_image, img_list, middle_video):
         
@@ -247,15 +253,18 @@ class Chat:
             # ext = os.path.splitext(video_path)[-1].lower()
             # print(video_path)
             video_length = video_duration(video_path) 
+            print('video_length:', video_length)
+
             num_frames, cur_frame = self.cal_frame(video_length, cur_min, cur_sec, middle_video)
             print('num_frames:', num_frames)
             print('cur_frame:', cur_frame)
 
             if num_frames == 0:
-                video_fragment = parse_video_fragment(video_path=video_path, video_length=video_length, n_stage=0, n_samples= N_SAMPLES)
+                video_fragment = parse_video_fragment(video_path=video_path, fragment_video_path=fragment_video_path,
+                                                      video_length=video_length, n_stage=0, n_samples= N_SAMPLES) # clip small segments of the video
                 video_fragment, msg = load_video(
                     video_path=fragment_video_path,
-                    n_frms=MAX_INT, 
+                    n_frms=MAX_INT, # 8
                     height=224,
                     width=224,
                     sampling ="uniform", return_msg = True
@@ -266,8 +275,9 @@ class Chat:
 
             else:
                 for i in range(num_frames):
-                    print(i)
-                    video_fragment = parse_video_fragment(video_path=video_path, video_length=video_length, n_stage=i, n_samples= N_SAMPLES)
+                    print('Segment', i)
+                    video_fragment = parse_video_fragment(video_path=video_path, fragment_video_path=fragment_video_path,
+                                                          video_length=video_length, n_stage=i, n_samples= N_SAMPLES)
                     video_fragment, msg = load_video(
                         video_path=fragment_video_path,
                         n_frms=MAX_INT, 
@@ -277,9 +287,10 @@ class Chat:
                     )
                     video_fragment = self.vis_processor.transform(video_fragment) 
                     video_fragment = video_fragment.unsqueeze(0).to(self.device)
+                    print('video_fragment.shape:', video_fragment.shape)
 
-                    if middle_video:
-                        self.model.encode_short_memory_frame(video_fragment, cur_frame)
+                    if middle_video and (i == num_frames - 1):
+                        self.model.encode_short_memory_frame(video_fragment, cur_frame) # the cur_frame is the frame number in the current fragment
                     else:
                         self.model.encode_short_memory_frame(video_fragment)
                 
@@ -287,7 +298,7 @@ class Chat:
             raise NotImplementedError
         
         print('ck middle_video:', middle_video)
-        video_emb, _ = self.model.encode_long_video(cur_image, middle_video)
+        video_emb, _ = self.model.encode_long_video(cur_image, middle_video) # +++++
         print('len(img_list):', len(img_list))
         img_list.append(video_emb) 
 
@@ -387,19 +398,18 @@ if __name__ =='__main__':
     print('video_path:', video_path)
     cap = cv2.VideoCapture(video_path)
     fps_video = cap.get(cv2.CAP_PROP_FPS)
-    cur_fps = fps_video * (60*cur_min + cur_sec)
+    print('fps_video:', fps_video)
+    print('cur_min:', cur_min)
+    print('cur_sec:', cur_sec)
+    cur_fps = int(fps_video * (60*cur_min + cur_sec))
     print('cur_frame:', cur_fps)
     
-    # cap = cv2.VideoCapture(video_path)
-    # if cap.isOpened() == False:
-    #     print('Error opening video stream or file')
-    #     exit()
-
     cap.set(cv2.CAP_PROP_POS_FRAMES, cur_fps)
     ret, frame = cap.read()
     if ret == False:
         print('Video is over')
         exit()
+
     temp_frame_path = 'src/output_frame/snapshot.jpg'
 
     cv2.imwrite(temp_frame_path, frame) 
@@ -415,7 +425,7 @@ if __name__ =='__main__':
 
     img_list = []
     # middle_video = True
-    msg = chat.upload_video_without_audio(
+    msg = chat.upload_video_without_audio(  # +++++
         video_path=video_path, 
         fragment_video_path=fragment_video_path,
         cur_min=cur_min, 
@@ -446,5 +456,21 @@ if __name__ =='__main__':
     infer_end = time()
     print(f'Inference time: {round(infer_end - msg_end)} seconds')
     print(f'Total time: {round(infer_end - inference_start)} seconds')
+
+
+    # append the question and answer to the log file
+    url_path = 'https://www.youtube.com/watch?v='+video_path.split('/')[-1].split('.')[0]
+    with open('src/tian_qa_log.txt', 'a') as f:
+        f.write(f'video_path: {video_path}\n')
+        f.write(f'video_url: {url_path}\n')
+        f.write(f'cur_min: {cur_min}\n')
+        f.write(f'cur_sec: {cur_sec}\n')
+        f.write(f'middle_video: {middle_video}\n')
+        f.write(f'Question: {text_input}\n')
+        f.write(f'Answer: {llm_message}\n')
+        f.write('\n')
+
+
+
 
     

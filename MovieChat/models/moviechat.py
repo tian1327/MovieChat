@@ -243,9 +243,10 @@ class MovieChat(Blip2Base):
         self.visual_encoder.float()
 
     def encode_short_memory_frame(self, videofragment, n_frame:int = 16):
+
         device = videofragment.device
         # input shape b,c,t,h,w
-        batch_size,_,time_length,_,_ = videofragment.size() # batch_size:1 time_length:8
+        batch_size, _, time_length, _, _ = videofragment.size() # batch_size:1 time_length:8
         videofragment = einops.rearrange(videofragment, 'b c t h w -> (b t) c h w') 
         with self.maybe_autocast():
             # embed image features with blip2, out: (b t) q h
@@ -263,9 +264,9 @@ class MovieChat(Blip2Base):
             # load short_memory_buffer
             cur_frame = 0
             q_hidden_state = query_output.last_hidden_state 
-            for frame in q_hidden_state:
+            for frame in q_hidden_state: # +++++
                 if cur_frame < n_frame:
-                    if len(self.short_memory_buffer) == self.short_memory_length:
+                    if len(self.short_memory_buffer) == self.short_memory_length: # short memory length = 18
                         self.short_memory_buffer.pop(0)
                     self.short_memory_buffer.append(frame)
                 cur_frame += 1
@@ -281,20 +282,22 @@ class MovieChat(Blip2Base):
                 similar_list.append(frame_silimar)
             
 
-            while len(self.short_memory_buffer) > self.short_memory_merge:
+            while len(self.short_memory_buffer) > self.short_memory_merge: # short_memory_merge = 2, why? changed from > 2 to >= 2 for fixing short movies
                 max_value = max(similar_list)
                 max_index = similar_list.index(max_value)
-                new_frame_feature = (self.short_memory_buffer[max_index].cpu()+self.short_memory_buffer[max_index+1].cpu())/2
+                new_frame_feature = (self.short_memory_buffer[max_index].cpu() + self.short_memory_buffer[max_index+1].cpu())/2 # average
                 self.short_memory_buffer[max_index] = new_frame_feature.cuda()
                 del(self.short_memory_buffer[max_index+1])
+
                 similar_list = []
                 for frame_i in range(len(self.short_memory_buffer)-1):
                     frame_silimar = cosine(self.short_memory_buffer[frame_i].flatten().cpu(), self.short_memory_buffer[frame_i+1].flatten().cpu())
                     similar_list.append(frame_silimar)
 
-            for frame in self.short_memory_buffer:
-                
-                self.long_memory_buffer.append(frame)
+            for frame in self.short_memory_buffer:                
+                self.long_memory_buffer.append(frame) # consolidate short_memory_buffer to long_memory_buffer
+            print('len(self.long_memory_buffer):',len(self.long_memory_buffer))
+
 
     def encode_long_video(self, cur_image, middle_video:False):
         
@@ -302,6 +305,7 @@ class MovieChat(Blip2Base):
         # input shape b,c,t,h,w
         batch_size = 1 # batch_size:1 
         self.long_memory_buffer = [i.unsqueeze(0) for i in self.long_memory_buffer]
+        print('len(self.long_memory_buffer):',len(self.long_memory_buffer))
 
         # expand position embedding
         n_position = 8
@@ -323,27 +327,32 @@ class MovieChat(Blip2Base):
             for j in range(n_position):
                 q_i = alpha * u[i] + (1-alpha) * u[j] 
                 q_i = q_i.unsqueeze(0)
-                frame_position_embeddings.append(q_i)
+                frame_position_embeddings.append(q_i) # 8*8=64
         frame_position_embeddings = torch.cat(frame_position_embeddings, dim = 0)
         
-        if middle_video:
+        if middle_video: # breakpoint mode
             cur_long_length = len(self.long_memory_buffer)
             cur_short_length = len(self.temp_short_memory)
+            print('cur_long_length:',cur_long_length)
+            print('cur_short_length:',cur_short_length)
 
-            while (cur_long_length+cur_short_length+1) > self.max_frame_pos:
-                self.temp_short_memory.pop(0)
+            while (len(self.long_memory_buffer)+len(self.temp_short_memory)+1) > frame_position_embeddings.shape[0]:
+                if len(self.temp_short_memory) != 0:
+                    self.temp_short_memory.pop(0)
+                else:
+                    self.long_memory_buffer.pop(0)
             
             if len(self.long_memory_buffer) == 0:
                 self.temp_short_memory = [i.unsqueeze(0) for i in self.temp_short_memory]
                 cur_short = torch.cat(self.temp_short_memory, dim = 0)
-                video_features = torch.cat([video_features, cur_image], dim = 0)
+                video_features = torch.cat([cur_short, cur_image], dim = 0)
             else:
                 cur_video = torch.cat(self.long_memory_buffer,dim = 0)
                 self.temp_short_memory = [i.unsqueeze(0) for i in self.temp_short_memory]
                 cur_short = torch.cat(self.temp_short_memory, dim = 0)
                 
-                video_features = torch.cat([cur_video,cur_short], dim = 0)
-                video_features = torch.cat([video_features, cur_image], dim = 0)
+                video_features = torch.cat([cur_video, cur_short], dim = 0) # concatenate long_memory_buffer and short_memory_buffer
+                video_features = torch.cat([video_features, cur_image], dim = 0) # concatenate video_features and cur_image
             
             cur_video = []
             cur_pos = []
@@ -365,6 +374,7 @@ class MovieChat(Blip2Base):
             frame_hidden_state =  einops.rearrange(frame_hidden_state, 'b t q h -> b (t q) h',b=batch_size,t=len(video_features)) 
             frame_atts = torch.ones(frame_hidden_state.size()[:-1], dtype=torch.long).to(device)
             video_query_tokens = self.video_query_tokens.expand(frame_hidden_state.shape[0], -1, -1) 
+
             # a video Q-former to aggregate frame-level representations 
             video_query_output = self.video_Qformer.bert(
                 query_embeds=video_query_tokens, 
@@ -379,12 +389,13 @@ class MovieChat(Blip2Base):
             atts_llama = torch.ones(inputs_llama.size()[:-1], dtype=torch.long).to(device)
             return inputs_llama, atts_llama
 
-        else:           
+        else: # global mode
             cur_video = []
             cur_pos = []
+            print('frame_position_embeddings.shape:',frame_position_embeddings.shape)
             for i in range(len(self.long_memory_buffer)):
-                    cur_pos.append(frame_position_embeddings[i])
-                    cur_video.append(self.long_memory_buffer[i])
+                cur_pos.append(frame_position_embeddings[i])
+                cur_video.append(self.long_memory_buffer[i])
             
             cur_pos = [j.unsqueeze(0) for j in cur_pos]
             cur_position_embeddings = torch.cat(cur_pos, dim=0)
@@ -408,12 +419,11 @@ class MovieChat(Blip2Base):
             )
             video_hiddens=video_query_output.last_hidden_state 
 
-
-
-        # a linear layer to project the output video representations into the same dimension as the text embeddings of LLMs
+            # a linear layer to project the output video representations into the same dimension as the text embeddings of LLMs
             inputs_llama = self.llama_proj(video_hiddens)
             atts_llama = torch.ones(inputs_llama.size()[:-1], dtype=torch.long).to(device) 
             return inputs_llama, atts_llama
+
 
     def encode_image(self, image):
         device = 'cuda:0'

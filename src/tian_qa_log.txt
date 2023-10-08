@@ -1,0 +1,72 @@
+video_path: src/ANet/4Lu8ECLHvK4.mp4
+video_url: https://www.youtube.com/watch?v=4Lu8ECLHvK4
+cur_min: 0
+cur_sec: 27
+middle_video: False
+Question: Describe the activities in the video. Focus on objects and movement.
+Answer: In this video, we see a young boy playing baseball with a young man standing by a dugout on a baseball field. The boy is wearing a red shirt and the man is wearing a blue shirt. There is also a ball in the center of the field, and a net ball on the outfield fence. The boy is using a baseball bat to hit the ball, and the man is watching from the dugout. The baseball field has a blue sky in the background, and there are white fences surrounding the field.
+
+video_path: src/ANet/4Lu8ECLHvK4.mp4
+video_url: https://www.youtube.com/watch?v=4Lu8ECLHvK4
+cur_min: 0
+cur_sec: 32
+middle_video: True
+Question: What is the color of the ball thrown by the boy?
+Answer: The ball thrown by the boy is yellow.
+
+video_path: src/ANet/4Lu8ECLHvK4.mp4
+video_url: https://www.youtube.com/watch?v=4Lu8ECLHvK4
+cur_min: 0
+cur_sec: 32
+middle_video: False
+Question: Is there any dogs in the video?
+Answer: Yes, there is a dog in the video. It's not very clear, but it can be seen running across the field.
+
+video_path: src/ANet/4Lu8ECLHvK4.mp4
+video_url: https://www.youtube.com/watch?v=4Lu8ECLHvK4
+cur_min: 0
+cur_sec: 32
+middle_video: False
+Question: What are the dogs doing in the video?
+Answer: In the video, the dogs are barking in the grass and dirt field.
+
+video_path: src/ANet/4Lu8ECLHvK4.mp4
+video_url: https://www.youtube.com/watch?v=4Lu8ECLHvK4
+cur_min: 0
+cur_sec: 32
+middle_video: False
+Question: Is it safe to drive a car in this field?
+Answer: Yes, it is safe to drive a car in this field. The dirt field is surrounded by green grass, trees, and a chain link fence. The scene shows a man playing baseball, a young boy walking on the dirt, a group of young boys playing baseball, a woman standing on a field, and a young man playing baseball.
+
+video_path: src/ANet/4Lu8ECLHvK4.mp4
+video_url: https://www.youtube.com/watch?v=4Lu8ECLHvK4
+cur_min: 0
+cur_sec: 19
+middle_video: True
+Question: What color of the t-shirt is the man wearing?
+Answer: The man is wearing a blue t-shirt.
+
+video_path: src/ANet/4Lu8ECLHvK4.mp4
+video_url: https://www.youtube.com/watch?v=4Lu8ECLHvK4
+cur_min: 0
+cur_sec: 19
+middle_video: True
+Question: Why does the man war a red shirt?
+Answer: The man in the video wears a red shirt. It's not specified why he is wearing it or what purpose it serves.
+
+video_path: src/ANet/4Lu8ECLHvK4.mp4
+video_url: https://www.youtube.com/watch?v=4Lu8ECLHvK4
+cur_min: 2
+cur_sec: 2
+middle_video: True
+Question: What is the number showing in the red plate?
+Answer: The number on the red plate is 9.
+
+video_path: src/ANet/4Lu8ECLHvK4.mp4
+video_url: https://www.youtube.com/watch?v=4Lu8ECLHvK4
+cur_min: 2
+cur_sec: 2
+middle_video: True
+Question: What is the number showing in the back of the blue shirt of the boy?
+Answer: I see a back number "10" in the blue shirt of the little boy.
+
